@@ -62,18 +62,16 @@ function App() {
   };
 
   return (
-    <div className="bg-[#BFB48F]">
+    <div className="bg-[#6E2594]">
       <div className="text-center flex flex-col h-screen justify-center ">
-        <h1 className="text-3xl mb-48 text-[#252627]">TODO LIST</h1>
+        <h1 className="text-3xl mb-48 text-[#FFFFFF]">TODO LIST</h1>
         <form
           onSubmit={handleSubmit}
           className="flex items-center justify-center"
         >
           <input
             type="text"
-            className={` placeholder:text-[#F2EFE9] text-[#F2EFE9] bg-[#564E58] pr-24 pl-5 py-3 outline-none rounded-full ${
-              todo.completed && "line-through"
-            }`}
+            className={`placeholder:text-[#FFFFFF] text-[#FFFFFF] bg-[#808080] pr-24 pl-5 py-3 outline-none rounded-full`}
             onChange={(e) => setTodo(e.target.value)}
             placeholder="Activity"
             value={todo}
@@ -81,7 +79,7 @@ function App() {
           />
           <button
             type="submit"
-            className="mx-10 px-8 py-3 bg-[#904E55] rounded-full text-[#F2EFE9]"
+            className="mx-10 px-8 py-3 bg-[#F5CB5C] rounded-full text-[#000000]"
           >
             Add Todo
           </button>
@@ -94,17 +92,21 @@ function App() {
                 required
                 onChange={(e) => setEditingText(e.target.value)}
                 value={editingText}
-                className="bg-[#564E58] pr-24 pl-5 rounded-full py-3 mr-5 mt-10 outline-none"
+                className="bg-[#808080] pr-24 pl-5 rounded-full py-3 mr-5 mt-10 outline-none text-[#FFFFFF]"
               />
             ) : (
-              <p className="bg-[#564E58] text-[#F2EFE9] px-16 rounded-full py-3 mr-10 mt-10">
+              <p
+                className={`bg-[#808080] text-[#FFFFFF] px-16 rounded-full py-3 mr-10 mt-10 ${
+                  todo.completed && "line-through italic"
+                }`}
+              >
                 {todo.text}
               </p>
             )}
             <div className="flex items-center mt-10 space-x-5">
               <button
                 onClick={() => deleteTodo(todo.id)}
-                className="bg-[#904E55] text-[#F2EFE9] px-6 py-3 rounded-full "
+                className="bg-[#ECD444] text-[#000000] px-6 py-3 rounded-full "
               >
                 Delete Todo
               </button>
@@ -116,14 +118,14 @@ function App() {
               />
               {todoEditing === todo.id ? (
                 <button
-                  className="bg-[#904E55] px-6 py-3 rounded-full text-[#F2EFE9]"
+                  className="bg-[#ECD444] px-6 py-3 rounded-full text-[#000000]"
                   onClick={() => submitTodo(todo.id)}
                 >
                   Submit Todo
                 </button>
               ) : (
                 <button
-                  className="bg-[#904E55] px-6 py-3 rounded-full text-[#F2EFE9]"
+                  className="bg-[#ECD444] px-6 py-3 rounded-full text-[#000000]"
                   onClick={() => setTodoEditing(todo.id)}
                 >
                   Edit Todo
