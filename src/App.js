@@ -53,10 +53,14 @@ function App() {
     setTodos(updatedTodos);
   };
 
-  const submitTodo = (id) => {
+  const submitTodo = (id, e) => {
     const updatedTodos = [...todos].map((todo) => {
       if (todo.id === id) {
         todo.text = editingText;
+      }
+      if (!todo.text) {
+        alert("Please fill add the activity");
+        e.preventDefault();
       }
       return todo;
     });
@@ -74,7 +78,7 @@ function App() {
         >
           <input
             type="text"
-            className={`placeholder:text-[#FFFFFF] text-[#FFFFFF] py-3 px-8 rounded-full bg-[#808080]`}
+            className={`placeholder:text-[#FFFFFF] md:text-2xl text-[#FFFFFF] outline-none py-3 px-8 rounded-full bg-[#808080]`}
             onChange={(e) => setTodo(e.target.value)}
             placeholder="Activity"
             value={todo}
@@ -91,13 +95,24 @@ function App() {
               stroke="currentColor"
               fill="currentColor"
               strokeWidth="0"
+              t="1551322312294"
               viewBox="0 0 1024 1024"
-              height="3em"
-              className="bg-[#000] ml-5 rounded-full text-[#F5CB5C] cursor-pointer"
-              width="3em"
+              version="1.1"
+              pid="10297"
+              height="2.5em"
+              width="2.5em"
               xmlns="http://www.w3.org/2000/svg"
+              className="bg-[#ecd444] ml-5 rounded-full md:text-xl text-[#000] cursor-pointer"
             >
-              <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm192 472c0 4.4-3.6 8-8 8H544v152c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V544H328c-4.4 0-8-3.6-8-8v-48c0-4.4 3.6-8 8-8h152V328c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v152h152c4.4 0 8 3.6 8 8v48z"></path>
+              <defs></defs>
+              <path
+                d="M474 152m8 0l60 0q8 0 8 8l0 704q0 8-8 8l-60 0q-8 0-8-8l0-704q0-8 8-8Z"
+                pid="10298"
+              ></path>
+              <path
+                d="M168 474m8 0l672 0q8 0 8 8l0 60q0 8-8 8l-672 0q-8 0-8-8l0-60q0-8 8-8Z"
+                pid="10299"
+              ></path>
             </svg>
           </button>
         </form>
@@ -109,11 +124,11 @@ function App() {
                 required
                 onChange={(e) => setEditingText(e.target.value)}
                 value={editingText}
-                className="bg-[#808080] pl-5 rounded-full py-3 mt-10 outline-none text-[#FFFFFF]"
+                className="bg-[#808080] md:text-2xl pl-5 rounded-full py-3 mt-10 outline-none text-[#FFFFFF]"
               />
             ) : (
               <p
-                className={`bg-[#808080] text-[#FFFFFF] px-8 rounded-full py-3 mr-10 mt-10 ${
+                className={`bg-[#808080] md:text-2xl text-[#FFFFFF] px-8 rounded-full py-3 mr-10 mt-10  ${
                   todo.completed && "line-through italic text-[#1C1C1E]"
                 }`}
               >
@@ -132,19 +147,19 @@ function App() {
                 fill="currentColor"
                 strokeWidth="0"
                 viewBox="0 0 1024 1024"
-                height="2.5em"
-                width="2.5em"
-                className="bg-[#000] text-[#ecd444]  rounded-full "
-                xmlns="http://www.w3.org/2000/svg"
+                height="2.7em"
+                width="2.7em"
                 onClick={() => deleteTodo(todo.id)}
+                className="bg-[#ecd444] ml-5 rounded-full md:text-xl text-[#000] cursor-pointer"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 0 1-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path>
+                <path d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"></path>
               </svg>
               <input
                 type="checkbox"
                 onChange={() => toggleComplete(todo.id)}
                 checked={todo.completed}
-                className="h-5 w-5 "
+                className="h-5 w-5 cursor-pointer "
               />
               {todoEditing === todo.id ? (
                 // <button
@@ -160,7 +175,7 @@ function App() {
                   viewBox="0 0 24 24"
                   height="2.5em"
                   width="2.5em"
-                  className="bg-[#ECD444] rounded-full text-[#000000]"
+                  className="cursor-pointer bg-[#ECD444] rounded-full text-[#000000]"
                   onClick={() => submitTodo(todo.id)}
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -180,7 +195,7 @@ function App() {
                   viewBox="0 0 1024 1024"
                   height="2.5em"
                   width="2.5em"
-                  className="bg-[#ecd444] rounded-lg text-[#000]"
+                  className="cursor-pointer bg-[#ecd444] rounded-lg text-[#000]"
                   onClick={() => setTodoEditing(todo.id)}
                   xmlns="http://www.w3.org/2000/svg"
                 >
