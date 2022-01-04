@@ -147,8 +147,8 @@ function App() {
                 fill="currentColor"
                 strokeWidth="0"
                 viewBox="0 0 1024 1024"
-                height="2.7em"
-                width="2.7em"
+                height="2.4em"
+                width="2.4em"
                 onClick={() => deleteTodo(todo.id)}
                 className="bg-[#ecd444] ml-5 rounded-full md:text-xl text-[#000] cursor-pointer"
                 xmlns="http://www.w3.org/2000/svg"
