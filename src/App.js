@@ -1,20 +1,34 @@
-import "./App.css";
+import { useEffect, useState } from "react";
+import FlipMove from "react-flip-move";
 import "./index.css";
-import { useState, useEffect } from "react";
 
 function App() {
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState([]);
   const [todoEditing, setTodoEditing] = useState(null);
   const [editingText, setEditingText] = useState("");
+  const [quote, setQuote] = useState("");
+
+  const generateRandomInteger = (min, max) => {
+    return Math.floor(min + Math.random() * (max + 1 - min));
+  };
+
+  useEffect(() => {
+    const fetchQuotes = async () =>
+      await fetch(`https://type.fit/api/quotes`)
+        .then((res) => res.json())
+        .then((data) => {
+          setQuote(data[generateRandomInteger(0, data.length)]);
+        });
+
+    fetchQuotes();
+  }, []);
 
   useEffect(() => {
     const temp = localStorage.getItem("todos");
     const loadedTodos = JSON.parse(temp);
 
-    if (loadedTodos) {
-      setTodos(loadedTodos);
-    }
+    if (loadedTodos) setTodos(loadedTodos);
   }, []);
 
   useEffect(() => {
@@ -22,21 +36,19 @@ function App() {
     localStorage.setItem("todos", temp);
   }, [todos]);
 
-  const handleSubmit = (e) => {
+  const addTodo = (e) => {
     e.preventDefault();
+    if (todo.length === 0) return;
 
     const newTodo = {
-      id: new Date().getTime(),
-      text: todo,
+      id: new Date(),
+      text: todo.charAt(0).toUpperCase() + todo.slice(1),
       completed: false,
     };
 
     setTodos([...todos].concat(newTodo));
     setTodo("");
   };
-
-  if (todo.text) {
-  }
 
   const deleteTodo = (id) => {
     const updatedTodos = [...todos].filter((todo) => todo.id !== id);
@@ -53,14 +65,10 @@ function App() {
     setTodos(updatedTodos);
   };
 
-  const submitTodo = (id, e) => {
+  const submitTodo = (id) => {
     const updatedTodos = [...todos].map((todo) => {
       if (todo.id === id) {
         todo.text = editingText;
-      }
-      if (!todo.text) {
-        alert("Please fill add the activity");
-        e.preventDefault();
       }
       return todo;
     });
@@ -69,142 +77,125 @@ function App() {
   };
 
   return (
-    <div className="bg-[#6E2594]">
-      <div className="text-center flex flex-col h-screen justify-center ">
-        <h1 className="text-3xl mb-40 md:text-4xl text-[#FFFFFF]">TODO LIST</h1>
-        <form
-          onSubmit={handleSubmit}
-          className="flex items-center justify-center"
-        >
-          <input
-            type="text"
-            className={`placeholder:text-[#FFFFFF] md:text-2xl text-[#FFFFFF] outline-none py-3 px-8 rounded-full bg-[#808080]`}
-            onChange={(e) => setTodo(e.target.value)}
-            placeholder="Activity"
-            value={todo}
-            required
-          />
-          {/* <button
-            type="submit"
-            className="px-8 py-3 bg-[#F5CB5C] rounded-full text-[#000000]"
-          >
-            Add Todo
-          </button> */}
-          <button type="submit">
-            <svg
-              stroke="currentColor"
-              fill="currentColor"
-              strokeWidth="0"
-              t="1551322312294"
-              viewBox="0 0 1024 1024"
-              version="1.1"
-              pid="10297"
-              height="2.5em"
-              width="2.5em"
-              xmlns="http://www.w3.org/2000/svg"
-              className="bg-[#ecd444] ml-5 rounded-full md:text-xl text-[#000] cursor-pointer"
-            >
-              <defs></defs>
-              <path
-                d="M474 152m8 0l60 0q8 0 8 8l0 704q0 8-8 8l-60 0q-8 0-8-8l0-704q0-8 8-8Z"
-                pid="10298"
-              ></path>
-              <path
-                d="M168 474m8 0l672 0q8 0 8 8l0 60q0 8-8 8l-672 0q-8 0-8-8l0-60q0-8 8-8Z"
-                pid="10299"
-              ></path>
-            </svg>
-          </button>
-        </form>
-        {todos.map((todo) => (
-          <div key={todo.id} className="flex items-center justify-center">
-            {todoEditing === todo.id ? (
-              <input
-                type="text"
-                required
-                onChange={(e) => setEditingText(e.target.value)}
-                value={editingText}
-                className="bg-[#808080] md:text-2xl pl-5 rounded-full py-3 mt-10 outline-none text-[#FFFFFF]"
-              />
-            ) : (
-              <p
-                className={`bg-[#808080] md:text-2xl text-[#FFFFFF] px-8 rounded-full py-3 mr-10 mt-10  ${
-                  todo.completed && "line-through italic text-[#1C1C1E]"
-                }`}
-              >
-                {todo.text}
-              </p>
-            )}
-            <div className="flex items-center mt-10 space-x-5">
-              {/* <button
-                onClick={() => deleteTodo(todo.id)}
-                className="bg-[#ECD444] text-[#000000]  rounded-full "
-              >
-                Delete Todo
-              </button> */}
+    <div className="App">
+      <div className="container">
+        <div className="motivation-card">
+          <h1>Do you need some motivation to start the day?</h1>
+          <div>
+            <h2>{quote.text}</h2>
+            <h4>{quote.author}</h4>
+          </div>
+        </div>
+        <div className="circle-1" />
+        <div className="circle-2" />
+        <div className="circle-3" />
+        <div className="circle-4" />
+        <div className="todo-list">
+          <h1 className="title">Hello there, what's the plan for today?</h1>
+          <form onSubmit={addTodo} className="todo-form">
+            <input
+              type="text"
+              className="todo-input"
+              placeholder="Activity..."
+              value={todo}
+              onChange={(e) => setTodo(e.target.value)}
+            />
+            <button className="todo-btn" type="submit">
               <svg
                 stroke="currentColor"
                 fill="currentColor"
                 strokeWidth="0"
-                viewBox="0 0 1024 1024"
-                height="2.4em"
-                width="2.4em"
-                onClick={() => deleteTodo(todo.id)}
-                className="bg-[#ecd444] ml-5 rounded-full md:text-xl text-[#000] cursor-pointer"
+                viewBox="0 0 448 512"
+                height="1em"
+                width="1em"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"></path>
+                <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path>
               </svg>
-              <input
-                type="checkbox"
-                onChange={() => toggleComplete(todo.id)}
-                checked={todo.completed}
-                className="h-5 w-5 cursor-pointer "
-              />
-              {todoEditing === todo.id ? (
-                // <button
-                //   className="bg-[#ECD444] rounded-full text-[#000000]"
-                //   onClick={() => submitTodo(todo.id)}
-                // >
-                //   Submit Todo
-                // </button>
-                <svg
-                  stroke="currentColor"
-                  fill="currentColor"
-                  strokeWidth="0"
-                  viewBox="0 0 24 24"
-                  height="2.5em"
-                  width="2.5em"
-                  className="cursor-pointer bg-[#ECD444] rounded-full text-[#000000]"
-                  onClick={() => submitTodo(todo.id)}
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path>
-                </svg>
-              ) : (
-                // <button
-                //   className="bg-[#ECD444] rounded-full text-[#000000]"
-                //   onClick={() => setTodoEditing(todo.id)}
-                // >
-                //   Edit Todo
-                // </button>
-                <svg
-                  stroke="currentColor"
-                  fill="currentColor"
-                  strokeWidth="0"
-                  viewBox="0 0 1024 1024"
-                  height="2.5em"
-                  width="2.5em"
-                  className="cursor-pointer bg-[#ecd444] rounded-lg text-[#000]"
-                  onClick={() => setTodoEditing(todo.id)}
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path>
-                </svg>
-              )}
-            </div>
-          </div>
-        ))}
+            </button>
+          </form>
+          <FlipMove typeName={null}>
+            {todos.map((todo) => (
+              <div className="todo-row" key={todo.id}>
+                {todoEditing === todo.id ? (
+                  <input
+                    type="text"
+                    className="todo-input"
+                    value={editingText}
+                    onChange={(e) => setEditingText(e.target.value)}
+                  />
+                ) : (
+                  <div
+                    className={`${todo.completed ? "completed" : ""} todo-row`}
+                  >
+                    {todo.text}
+                  </div>
+                )}
+                <div className="group-buttons">
+                  <div className="todo-btn">
+                    <svg
+                      onClick={() => deleteTodo(todo.id)}
+                      stroke="currentColor"
+                      fill="currentColor"
+                      strokeWidth="0"
+                      viewBox="0 0 448 512"
+                      height="1em"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"></path>
+                    </svg>
+                  </div>
+                  <div className="todo-btn test">
+                    <svg
+                      onClick={() => toggleComplete(todo.id)}
+                      stroke="currentColor"
+                      fill="currentColor"
+                      strokeWidth="0"
+                      viewBox="0 0 512 512"
+                      height="1em"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"></path>
+                    </svg>
+                  </div>
+                  {todoEditing === todo.id ? (
+                    <div className="todo-btn">
+                      <svg
+                        onClick={() => submitTodo(todo.id)}
+                        stroke="currentColor"
+                        fill="currentColor"
+                        strokeWidth="0"
+                        viewBox="0 0 512 512"
+                        height="1em"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M416 448h-84c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h84c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32h-84c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h84c53 0 96 43 96 96v192c0 53-43 96-96 96zm-47-201L201 79c-15-15-41-4.5-41 17v96H24c-13.3 0-24 10.7-24 24v96c0 13.3 10.7 24 24 24h136v96c0 21.5 26 32 41 17l168-168c9.3-9.4 9.3-24.6 0-34z"></path>
+                      </svg>
+                    </div>
+                  ) : (
+                    <div className="todo-btn">
+                      <svg
+                        onClick={() => setTodoEditing(todo.id)}
+                        stroke="currentColor"
+                        fill="currentColor"
+                        strokeWidth="0"
+                        viewBox="0 0 512 512"
+                        height="1em"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M290.74 93.24l128.02 128.02-277.99 277.99-114.14 12.6C11.35 513.54-1.56 500.62.14 485.34l12.7-114.22 277.9-277.88zm207.2-19.06l-60.11-60.11c-18.75-18.75-49.16-18.75-67.91 0l-56.55 56.55 128.02 128.02 56.55-56.55c18.75-18.76 18.75-49.16 0-67.91z"></path>
+                      </svg>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </FlipMove>
+        </div>
       </div>
     </div>
   );
