@@ -200,3 +200,23 @@ body {
   color: rgb(18, 122, 18);
   font-style: italic;
 }
+
+@media screen and (max-width: 321px) {
+  .todo__row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding-bottom: 15px;
+    font-size: 12px;
+  }
+  .todo__result {
+    padding-bottom: 15px;
+  }
+  .edit__input {
+    margin: 10px;
+  }
+  .todo__list {
+    margin: 15px;
+  }
+}
